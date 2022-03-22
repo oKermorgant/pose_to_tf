@@ -93,7 +93,7 @@ private:
 
     if(info->second.size() > 1)
     {
-      RCLCPP_WARN(get_logger(), topic, "seems to have several types of message");
+      RCLCPP_WARN(get_logger(), topic.c_str(), "seems to have several types of message");
     }
 
     const auto msg{info->second[0]};
@@ -125,7 +125,7 @@ private:
     }
     else
     {
-      RCLCPP_ERROR(get_logger(), topic, " has unsupported message type ", msg.c_str());
+      RCLCPP_ERROR(get_logger(), topic.c_str(), " has unsupported message type ", msg.c_str());
     }
   }
 
