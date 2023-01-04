@@ -14,10 +14,11 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
 add_executable(pose_to_tf pose_to_tf.cpp)
-ament_target_dependencies(pose_to_tf rclcpp nav_msgs tf2_ros geometry_msgs)
+ament_target_dependencies(pose_to_tf rclcpp nav_msgs tf2_ros geometry_msgs sensor_msgs)
 
 install(TARGETS pose_to_tf DESTINATION lib/${PROJECT_NAME})
 
