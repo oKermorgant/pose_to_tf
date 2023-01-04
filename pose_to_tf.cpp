@@ -58,30 +58,18 @@ public:
 
 private:
 
-  inline void republish(const string &child_frame,
-                        const Transform &pose)
-  {
-    tf.child_frame_id = child_frame;
-    tf.transform = pose;
-    br.sendTransform(tf);
-  }
 
-  inline void republish(const string &child_frame, const Quaternion &orientation)
+  template <class Translation=Vector3>
+  inline void republish(const string &child_frame, const Quaternion &orientation, const Translation &translation = Translation())
   {
+    tf.transform.translation.x = translation.x;
+    tf.transform.translation.y = translation.y;
+    tf.transform.translation.z = translation.z;
     tf.child_frame_id = child_frame;
     tf.transform.rotation = orientation;
     br.sendTransform(tf);
   }
 
-  inline void republish(const string &child_frame, const Pose &pose)
-  {
-    tf.child_frame_id = child_frame;
-    tf.transform.translation.x = pose.position.x;
-    tf.transform.translation.y = pose.position.y;
-    tf.transform.translation.z = pose.position.z;
-    tf.transform.rotation = pose.orientation;
-    br.sendTransform(tf);
-  }
 
   void detectTopicType()
   {
@@ -106,7 +94,7 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = get_clock()->now();
-          republish(child_frame, *msg);});
+          republish(child_frame, msg->orientation, msg->position);});
     }
     else if(msg == "geometry_msgs/msg/pose_stamped")
     {
@@ -114,7 +102,7 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = msg->header.stamp;
-          republish(msg->header.frame_id, msg->pose);});
+          republish(msg->header.frame_id, msg->pose.orientation, msg->pose.position);});
     }
     else if(msg == "geometry_msgs/msg/Transform")
     {
@@ -122,26 +110,27 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = get_clock()->now();
-          republish(child_frame, *msg);});
+          republish(child_frame, msg->rotation, msg->translation);});
     }
     else if(msg == "geometry_msgs/msg/TransformStamped")
     {
       pose_sub = create_subscription<TransformStamped>(topic, 1, [&](TransformStamped::SharedPtr msg)
       {
           tf.header = msg->header;
-          republish(msg->child_frame_id, msg->transform);});
+          republish(msg->child_frame_id, msg->transform.rotation, msg->transform.translation);});
     }
     else if(msg == "nav_msgs/msg/Odometry")
     {
       pose_sub = create_subscription<Odometry>(topic, 1, [&](Odometry::SharedPtr msg)
       {
           tf.header = msg->header;
-          republish(msg->child_frame_id, msg->pose.pose);});
+          republish(msg->child_frame_id, msg->pose.pose.orientation, msg->pose.pose.position);});
     }
     else if(msg == "sensor_msgs/msg/Imu")
     {
       pose_sub = create_subscription<Imu>(topic, rclcpp::SensorDataQoS(), [&](Imu::SharedPtr msg)
       {
+          tf.header.frame_id = parent_frame;
           tf.header.stamp = msg->header.stamp;
           republish(msg->header.frame_id, msg->orientation);});
     }
@@ -150,9 +139,6 @@ private:
       RCLCPP_ERROR(get_logger(), topic.c_str(), " has unsupported message type ", msg.c_str());
     }
   }
-
-
-
 
 };
 }
