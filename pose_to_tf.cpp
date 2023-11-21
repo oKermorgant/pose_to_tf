@@ -96,7 +96,7 @@ private:
           tf.header.stamp = get_clock()->now();
           republish(child_frame, msg->orientation, msg->position);});
     }
-    else if(msg == "geometry_msgs/msg/pose_stamped")
+    else if(msg == "geometry_msgs/msg/PoseStamped")
     {
       pose_sub = create_subscription<PoseStamped>(topic, 1, [&](PoseStamped::SharedPtr msg)
       {

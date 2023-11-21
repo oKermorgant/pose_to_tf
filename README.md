@@ -7,6 +7,7 @@ It will simply republish the pose as a transform on `/tf`. If the parent frame i
 It can be used to simulate perfect localization (on `/tf`) from a ground truth topic published by a simulator.
 
 Supported messages are:
+
 - `geometry_msgs/Pose`
 - `geometry_msgs/PoseStamped`
 - `geometry_msgs/Transform`
