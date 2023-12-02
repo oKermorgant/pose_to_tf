@@ -22,7 +22,8 @@ Supported messages are:
 - `child_frame`: child frame to be used in tf publisher (defaults to `base_link`)
 - `parent_frame`: parent frame to be used in tf publisher (defaults to `world`)
 
-The frame parameters are only used if the corresponding information is not available in the message itself:
-- `Pose` and `Transform` do not convey any frame
-- `PoseStamped` and `Imu` only convey `child_frame` in the header
-- `TransformStamped` and `Odometry` convey both `child_frame` explicitely and `parent_frame` in the header
+The frame parameters are only to complement messages that do not include the information:
+
+- `Pose` and `Transform` do not convey any frame, so both parameters are used;
+- `PoseStamped` and `Imu` only convey `child_frame` in the header, the `parent_frame` parameter is thus used;
+- `TransformStamped` and `Odometry` convey both `child_frame` explicitely and `parent_frame` in the header.
