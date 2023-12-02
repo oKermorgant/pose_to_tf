@@ -94,7 +94,8 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = get_clock()->now();
-          republish(child_frame, msg->orientation, msg->position);});
+          republish(child_frame, msg->orientation, msg->position);
+      });
     }
     else if(msg == "geometry_msgs/msg/PoseStamped")
     {
@@ -102,7 +103,8 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = msg->header.stamp;
-          republish(msg->header.frame_id, msg->pose.orientation, msg->pose.position);});
+          republish(msg->header.frame_id, msg->pose.orientation, msg->pose.position);
+      });
     }
     else if(msg == "geometry_msgs/msg/Transform")
     {
@@ -110,21 +112,24 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = get_clock()->now();
-          republish(child_frame, msg->rotation, msg->translation);});
+          republish(child_frame, msg->rotation, msg->translation);
+      });
     }
     else if(msg == "geometry_msgs/msg/TransformStamped")
     {
       pose_sub = create_subscription<TransformStamped>(topic, 1, [&](TransformStamped::SharedPtr msg)
       {
           tf.header = msg->header;
-          republish(msg->child_frame_id, msg->transform.rotation, msg->transform.translation);});
+          republish(msg->child_frame_id, msg->transform.rotation, msg->transform.translation);
+      });
     }
     else if(msg == "nav_msgs/msg/Odometry")
     {
       pose_sub = create_subscription<Odometry>(topic, 1, [&](Odometry::SharedPtr msg)
       {
           tf.header = msg->header;
-          republish(msg->child_frame_id, msg->pose.pose.orientation, msg->pose.pose.position);});
+          republish(msg->child_frame_id, msg->pose.pose.orientation, msg->pose.pose.position);
+      });
     }
     else if(msg == "sensor_msgs/msg/Imu")
     {
@@ -132,7 +137,8 @@ private:
       {
           tf.header.frame_id = parent_frame;
           tf.header.stamp = msg->header.stamp;
-          republish(msg->header.frame_id, msg->orientation);});
+          republish(msg->header.frame_id, msg->orientation);
+      });
     }
     else
     {
