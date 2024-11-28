@@ -1,4 +1,3 @@
-#include <iostream>
 #include <memory>
 
 #include <rclcpp/rclcpp.hpp>
@@ -7,6 +6,7 @@
 // supported incoming poses
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <geometry_msgs/msg/transform.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -23,25 +23,20 @@ namespace pose_to_tf
 {
 using nav_msgs::msg::Odometry;
 
-class Pose2TF : public rclcpp::Node
+class Pose2CovarianceStamped : public rclcpp::Node
 {
-  tf2_ros::TransformBroadcaster br;
+  tf2_ros::TransformBroadcaster br{this};
   geometry_msgs::msg::TransformStamped tf;
 
   rclcpp::SubscriptionBase::SharedPtr pose_sub;
   rclcpp::TimerBase::SharedPtr topic_timer;
 
-  string topic, parent_frame, child_frame;
-
-
+  string topic{declare_parameter<string>("topic", "pose_gt")};
+  string parent_frame{declare_parameter<string>("parent_frame", "world")};
+  string child_frame{declare_parameter<string>("child_frame", "base_link")};
 
 public:
-  explicit Pose2TF(rclcpp::NodeOptions options):
-    Node("pose_to_tf", options),
-    br(this),
-    topic         {declare_parameter<string>("topic", "pose_gt")},
-    parent_frame  {declare_parameter<string>("parent_frame", "world")},
-    child_frame   {declare_parameter<string>("child_frame", "base_link")}
+  explicit Pose2CovarianceStamped(rclcpp::NodeOptions options): Node("pose_to_tf", options)
   {
     // topic to absolute in order to find it in list
     if(topic[0] != '/')
@@ -52,7 +47,6 @@ public:
       else
         topic = ns + "/" + topic;
     }
-
     topic_timer = create_wall_timer(500ms, [&](){detectTopicType();});
   }
 
@@ -153,7 +147,7 @@ private:
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<pose_to_tf::Pose2TF>(rclcpp::NodeOptions{}));
+  rclcpp::spin(std::make_shared<pose_to_tf::Pose2CovarianceStamped>(rclcpp::NodeOptions{}));
   rclcpp::shutdown();
   return 0;
 }

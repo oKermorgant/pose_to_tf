@@ -5,5 +5,6 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 ament_auto_add_executable(pose_to_tf pose_to_tf.cpp)
+ament_auto_add_executable(pose_with_covariance pose_with_covariance.cpp)
 
 ament_auto_package()
