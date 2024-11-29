@@ -1,5 +1,5 @@
 ### ekf config file ###
-/**:
+ekf:
     ros__parameters:
 
         initial_state: [0., 0., 0.,
@@ -9,7 +9,7 @@
                         0., 0., 0.]  # vel / acc
 
         use_sim_time: True
-        frequency: 30.0
+        frequency: 20.0
 
         sensor_timeout: 0.1
         two_d_mode: False
