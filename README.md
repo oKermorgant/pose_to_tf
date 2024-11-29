@@ -36,3 +36,5 @@ This node will republish the received `Pose` while adding the covariance field a
 
 - `cov.xyz` (default .01): the position covariance
 - `cov.rpy` (default .01): the orientation covariance
+
+A simple `robot_localization` parameter file is given to handle such a `PoseWithCovarianceStamped`.
